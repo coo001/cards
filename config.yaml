@@ -1,0 +1,47 @@
+# 연극 카드뉴스 파이프라인 설정
+
+# RSS 피드 (여러 개 가능). 언론사 '문화' 피드 → 아래 keywords로 연극 기사만 필터.
+# (Google News 검색 RSS는 링크가 google 리다이렉트라 기사 대표사진이 안 잡혀 제외함.)
+feeds:
+  - "https://www.yna.co.kr/rss/culture.xml"        # 연합뉴스 문화
+  - "https://rss.donga.com/culture.xml"            # 동아일보 문화
+  - "https://www.mk.co.kr/rss/30000023/"           # 매일경제 문화
+  - "https://www.khan.co.kr/rss/rssdata/culture_news.xml"  # 경향신문 문화
+
+# 기사 제목/요약에 이 중 하나라도 포함돼야 선택 (문화 피드에서 연극만 추림).
+keywords: ["연극"]
+
+brand:
+  account_handle: "@acts_news"
+  closing_message: "매일 연극 소식을 전해드려요"
+  cta: "팔로우 · 좋아요 · 댓글로 응원해주세요"
+  primary_color: "#141B2E"                 # 카드2/3 배경
+  primary_dark: "#0A0E1A"                   # 그라데이션 하단
+  accent_color: "#E5484D"                   # 강조(불릿·핸들·코멘트)
+  text_light: "#FFFFFF"
+  text_muted: "#B8C0D0"
+
+caption:
+  # 캡션 끝에 붙일 기본 해시태그(3개). 나머지 2개는 기사별로 Claude가 생성 → 총 5개.
+  base_hashtags: ["#연극", "#공연", "#카드뉴스"]
+
+fonts:                                     # 스킬 폴더 기준 상대경로 (Pretendard 번들)
+  extrabold: "assets/fonts/Pretendard-ExtraBold.ttf"
+  bold: "assets/fonts/Pretendard-Bold.ttf"
+  semibold: "assets/fonts/Pretendard-SemiBold.ttf"
+  regular: "assets/fonts/Pretendard-Regular.ttf"
+
+render:
+  width: 1080
+  height: 1350
+
+instagram:
+  graph_version: "v23.0"                    # graph.instagram.com API 버전
+
+# 카드2·3, 로고를 ChatGPT(codex OAuth, API 키 없음)로 생성. 한글 타이포가 안 깨짐.
+# codex_backend.py 를 import해서 씀 → ~/.codex/auth.json(codex login) 필요.
+chatgpt:
+  backend_dir: "C:/dev/openai"              # codex_backend.py 위치
+  size: "1024x1536"                          # 생성 크기(세로) → 1080x1350로 크롭
+  quality: "high"
+  effort: "high"

@@ -1,0 +1,13 @@
+# 민감/런타임 파일 — 절대 커밋 금지
+.env
+*.env
+.env.*
+
+# 런타임 산출물/상태
+output/
+state/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+Thumbs.db
