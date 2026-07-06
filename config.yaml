@@ -15,11 +15,11 @@ brand:
   account_handle: "@acts_news"
   closing_message: "매일 연극 소식을 전해드려요"
   cta: "팔로우 · 좋아요 · 댓글로 응원해주세요"
-  primary_color: "#141B2E"                 # 카드2/3 배경
-  primary_dark: "#0A0E1A"                   # 그라데이션 하단
-  accent_color: "#E5484D"                   # 강조(불릿·핸들·코멘트)
-  text_light: "#FFFFFF"
-  text_muted: "#B8C0D0"
+  primary_color: "#1A1613"                 # 웜 잉크 (오버레이 틴트)
+  primary_dark: "#0E0B09"                   # 그라데이션 하단
+  accent_color: "#C9A24B"                   # 샴페인 골드 (강조)
+  text_light: "#F4EFE6"                     # 크림
+  text_muted: "#A89C88"                     # 웜 토프
 
 caption:
   # 캡션 끝에 붙일 기본 해시태그(3개). 나머지 2개는 기사별로 Claude가 생성 → 총 5개.

@@ -275,12 +275,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--url", help="RSS 대신 특정 기사 URL 직접 사용")
     ap.add_argument("--config")
-    ap.add_argument("--date", help="출력 폴더 날짜 (기본: 오늘)")
+    ap.add_argument("--date", help="출력 폴더명 (기본: 날짜_시각 YYYY-MM-DD_HHMMSS)")
     ap.add_argument("--no-dedupe", action="store_true", help="이미 발행된 기사도 다시 선택")
     args = ap.parse_args()
 
     cfg = load_config(args.config)
-    date_str = args.date or dt.date.today().isoformat()
+    date_str = args.date or dt.datetime.now().strftime("%Y-%m-%d_%H%M%S")
     out_dir = out_dir_for(date_str)
 
     if args.url:

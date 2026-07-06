@@ -180,7 +180,7 @@ def render_hero(cfg, C, F, copy, article, size):
     d = ImageDraw.Draw(base)
     m = 84
 
-    pill(base, m, 80, "연극 뉴스", F.get("semibold", 34), C["light"], C["accent"])
+    pill(base, m, 80, "연극 뉴스", F.get("semibold", 34), C["dark"], C["accent"])
 
     title, sub = copy["hero"]["title"], copy["hero"]["subtitle"]
     tf, sf, srcf = F.get("extrabold", 90), F.get("regular", 42), F.get("regular", 28)
