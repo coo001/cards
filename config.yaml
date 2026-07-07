@@ -7,14 +7,21 @@ feeds:
   - "https://rss.donga.com/culture.xml"            # 동아일보 문화
   - "https://www.mk.co.kr/rss/30000023/"           # 매일경제 문화
   - "https://www.khan.co.kr/rss/rssdata/culture_news.xml"  # 경향신문 문화
+  - "https://www.segye.com/Articles/RSSList/segye_culture.xml"  # 세계일보 문화
+  - "https://www.newsis.com/RSS/culture.xml"       # 뉴시스 문화
 
-# 기사 제목/요약에 이 중 하나라도 포함돼야 선택 (문화 피드에서 연극만 추림).
+# RSS로 안 잡히는 연극 기사까지: 네이버 모바일 뉴스 검색(최신순)으로 폭넓게 수집.
+# 결과는 아래 keywords(제목/요약에 '연극' 등 포함)로 다시 걸러 연극 관련만 남긴다.
+naver_queries: ["연극", "연극 개막", "연극 초연", "연극 무대"]
+
+# 기사 제목/요약에 이 중 하나라도 포함돼야 선택 (문화 피드·네이버 결과에서 연극만 추림).
 keywords: ["연극"]
 
 brand:
   account_handle: "@acts_news"
   closing_message: "매일 연극 소식을 전해드려요"
   cta: "팔로우 · 좋아요 · 댓글로 응원해주세요"
+  summary_kicker: "한눈에 정리"             # 카드2 상단 키커('요약' 대체 문구)
   primary_color: "#1A1613"                 # 웜 잉크 (오버레이 틴트)
   primary_dark: "#0E0B09"                   # 그라데이션 하단
   accent_color: "#C9A24B"                   # 샴페인 골드 (강조)

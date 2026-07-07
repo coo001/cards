@@ -1,7 +1,7 @@
 """copy.json + article.json → 카드 3장(1080x1350 PNG). 3장 모두 같은 기사 사진을 공유(통일감).
 
 카드1 히어로 : 사진 풀블리드 + 하단 그라데이션 스크림 + 제목/부제
-카드2 요약   : 사진 풀블리드 + 진한 오버레이 + 핵심요약 3줄 + 코멘트
+카드2 정리   : 사진 풀블리드 + 진한 오버레이 + 리드 + 정리 항목 + 코멘트
 카드3 마무리 : 사진 풀블리드 + 진한 오버레이 + 마무리 문구 + 계정 핸들 + CTA
 폰트는 Pretendard(번들). 사진이 없으면 네이비 그라데이션으로 폴백.
 """
@@ -200,37 +200,67 @@ def render_hero(cfg, C, F, copy, article, size):
     return base.convert("RGB")
 
 
-# ---------------- 카드2: 요약 ----------------
+# ---------------- 카드2: 뉴스 정리 ----------------
+def split_point(it):
+    """'키워드 — 설명' → (키워드, 설명). 구분자 없으면 (전체, "")."""
+    for sep in (" — ", " – ", " - "):
+        if sep in it:
+            key, rest = it.split(sep, 1)
+            return key.strip(), rest.strip()
+    return it, ""
+
+
 def render_summary(cfg, C, F, copy, article, size):
     W, H = size
     base = base_textcard(C, load_photo(article), W, H)
     d = ImageDraw.Draw(base)
     s = copy["summary"]
+    b = cfg["brand"]
     m, maxw = 96, 1080 - 96 * 2
-    y = 150
+    y = 132
 
+    # 키커 ('요약' 대체, config에서 조정 가능)
+    kicker = b.get("summary_kicker", "한눈에 정리")
     d.rounded_rectangle([m, y, m + 74, y + 12], radius=6, fill=(*C["accent"], 255))
-    y += 40
-    d.text((m, y), "핵심 요약", font=F.get("semibold", 38), fill=(*C["accent"], 255))
-    y += line_h(F.get("semibold", 38)) + 22
+    y += 38
+    kf0 = F.get("semibold", 36)
+    d.text((m, y), kicker, font=kf0, fill=(*C["accent"], 255))
+    y += line_h(kf0) + 18
 
-    hf = F.get("extrabold", 62)
+    # 후킹 헤딩
+    hf = F.get("extrabold", 58)
     y = draw_lines(base, balanced_wrap(d, s.get("heading", ""), hf, maxw), hf, m, y, C["light"], 4, shadow=90)
-    y += 44
+    y += 22
 
-    bf = F.get("regular", 44)
-    for it in s["body"]:
-        cy = y + line_h(bf) // 2 - 9
-        d.ellipse([m, cy, m + 18, cy + 18], fill=(*C["accent"], 255))
-        y = draw_lines(base, wrap(d, it, bf, maxw - 48), bf, m + 48, y, C["light"], 4, shadow=80)
+    # 리드 문단(배경·맥락) — 카드2를 더 알차게
+    lead = s.get("lead")
+    if lead:
+        lf = F.get("regular", 37)
+        y = draw_lines(base, wrap(d, lead, lf, maxw), lf, m, y, C["muted"], 9, shadow=50)
         y += 26
+        d.line([(m, y), (W - m, y)], fill=(*C["muted"], 80), width=2)
+        y += 32
 
+    # 정리 항목: '키워드 — 설명'이면 키워드 볼드 강조 + 설명 줄, 아니면 일반 불릿
+    bf, kf = F.get("regular", 41), F.get("bold", 41)
+    for it in s["body"]:
+        key, rest = split_point(it)
+        cy = y + line_h(kf if rest else bf) // 2 - 9
+        d.ellipse([m, cy, m + 16, cy + 16], fill=(*C["accent"], 255))
+        if rest:
+            y = draw_lines(base, [key], kf, m + 42, y, C["accent"], 2, shadow=70)
+            y = draw_lines(base, wrap(d, rest, bf, maxw - 42), bf, m + 42, y, C["light"], 4, shadow=60)
+        else:
+            y = draw_lines(base, wrap(d, key, bf, maxw - 42), bf, m + 42, y, C["light"], 4, shadow=60)
+        y += 20
+
+    # 관전 포인트 한 줄(하단 고정)
     comment = s.get("comment")
     if comment:
-        cy = H - 208
+        cy = H - 190
         d.line([(m, cy), (W - m, cy)], fill=(*C["muted"], 160), width=2)
         draw_lines(base, balanced_wrap(d, comment, F.get("bold", 42), maxw),
-                   F.get("bold", 42), m, cy + 32, C["accent"], 4, shadow=80)
+                   F.get("bold", 42), m, cy + 30, C["accent"], 4, shadow=80)
     return base.convert("RGB")
 
 

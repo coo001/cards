@@ -11,9 +11,8 @@ from pathlib import Path
 
 import requests
 
-from common import STATE_DIR, emit, load_config, load_json, save_json
-
-POSTED_PATH = STATE_DIR / "posted.json"
+from common import (POSTED_PATH, STATE_DIR, content_sig, emit, load_config,
+                    load_json, save_json, with_source_link)
 
 
 def api_base(cfg):
@@ -73,6 +72,8 @@ def mark_posted(article):
     posted.append({
         "url": article.get("url"),
         "title": article.get("title"),
+        "sig": article.get("sig") or content_sig(
+            article.get("title", ""), article.get("snippet", ""), article.get("body", "")),
         "date": dt.date.today().isoformat(),
     })
     STATE_DIR.mkdir(parents=True, exist_ok=True)
@@ -100,7 +101,7 @@ def main():
         raise SystemExit("urls.json 없음 — upload_imgbb.py를 먼저 실행하세요.")
     if not copy:
         raise SystemExit("copy.json 없음.")
-    caption = copy.get("caption", "")
+    caption = with_source_link(copy.get("caption", ""), article.get("url"))
 
     base = api_base(cfg)
     children = []
